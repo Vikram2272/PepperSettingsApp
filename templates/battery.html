@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+<style type="text/css">
+</style>
+{% endblock %}
+{% block content %}
+
+<div id="bat" class="contrainer-fluid">
+
+  <div class="row pt-1 text-right float-right">
+    <button class="btn btn-danger px-4">Exit</button>
+  </div>
+  <h2 class="pt-4">BATTERY</h2>
+  <div class="row">
+    <div class="col-6 text-center justify-content-center pb-4">
+      <h4 class="pb-3 pt-4">Current Battery Level</h4>
+      <div class="myBar text-center justify-content-center d-flex">
+
+      </div>
+    </div>
+    <div class="col-6 myBar1">
+      <h4 class="pb-3 pt-4">Battery Details</h4>
+      <table class="table text-left">
+        <tbody>
+          <tr>
+            <th scope="row">Charging Flap</th>
+            <td>Flap is open</td>
+
+          </tr>
+          <tr>
+            <th scope="row">Charge Status</th>
+            <td>Charging</td>
+
+          </tr>
+          <tr>
+            <th scope="row">Battery Capacity</th>
+            <td>400mps</td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block footer %}
+<script type="text/javascript">
+  var progressDiv = $('<div class="progress">');
+  var progressBar = $(
+    '<div id="prog" class="progress-bar progress-bar-striped progress-bar-animated text-center" role="progressbar" aria-valuemin="0" aria-valuemax="100">'
+    );
+  $(function () {
+    $.getJSON('/chargeLevel',
+      function (data) {
+        progressBar.text(data + "%");
+        //do nothing
+        if (data < 35) {
+          progressBar.addClass('bg-danger');
+        } else if (data < 55) {
+          progressBar.addClass('bg-warning');
+        } else {
+          progressBar.addClass('bg-success');
+        }
+        progressBar.width(data + '%').attr('aria-valuenow', data);
+
+        console.log(data + " : Charge Level");
+        return false;
+      });
+  });
+  $(progressBar).appendTo(progressDiv);
+  $(progressDiv).appendTo('.myBar');
+
+  $(function () {
+    $.getJSON('/isCharge',
+      function (data) {
+        if (data.isCharge == 'True') {
+          console.log("Charging");
+        } else {
+          console.log("Not Charging");
+        }
+        return false;
+      });
+  });
+</script>
+{% endblock %}
