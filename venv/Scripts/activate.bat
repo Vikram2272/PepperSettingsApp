@@ -1,6 +1,6 @@
 @echo off
 
-set "VIRTUAL_ENV=C:\Users\Vikram Thind\Desktop\myFlaskProject\venv"
+set "VIRTUAL_ENV=C:\Users\vikra\Documents\GitHub\PepperSettingsApp\venv"
 
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"

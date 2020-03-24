@@ -43,13 +43,14 @@ def display():
 def asr():
   return render_template('asr.html')
 
-@app.route("/battery")
-def battery():
-  return render_template('battery.html', data=chargeLevel)
-
 @app.route("/reset")
 def reset():
   return render_template('reset.html')
+
+####################################  Battery Functions  ###################################
+@app.route("/battery")
+def battery():
+  return render_template('battery.html', data=chargeLevel)
 
 @app.route('/isCharge')
 def isCharge():
@@ -64,8 +65,12 @@ def isCharge():
 def chargeLevel():
     #bat = ALProxy("ALBattery", ip,port)
     #data = bat.getBatteryCharge();
-    data = 80
+    data = 78
     return str(data)
+
+@app.route('/batterysaver')
+def batterysaver():
+  return str(22)
 
 if __name__ == '__main__':
   app.run(debug=True)

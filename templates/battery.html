@@ -16,9 +16,29 @@
   <div class="row">
     <div class="col-6 text-center justify-content-center pb-4">
       <h4 class="pb-3 pt-4">Current Battery Level</h4>
-      <div class="myBar text-center justify-content-center d-flex">
-
+      <div class="myBar text-center justify-content-center d-flex ">
       </div>
+      <div class="col-6 myBar1">
+      </div>
+      <div class="pt-4">
+        <h7 id="expectedTime"></h7>
+      </div>
+      <table class="table mt-5 text-left ml-5">
+        <tbody class="text-left">
+          <tr>
+            <th>Battery Saver</th>
+            <td id="batterySaver" class="btn btn-light p-2">OFF</td>
+          </tr>
+          <tr>
+            <th>Battery Optimisation</th>
+            <td class="btn btn-light p-2">OFF</td>
+          </tr>
+          <tr>
+            <th>Battery Saver</th>
+            <td class="btn btn-light p-2">OFF</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="col-6 myBar1">
       <h4 class="pb-3 pt-4">Battery Details</h4>
@@ -27,36 +47,35 @@
           <tr>
             <th scope="row">Charging Flap</th>
             <td>Flap is open</td>
-
           </tr>
           <tr>
             <th scope="row">Charge Status</th>
             <td>Charging</td>
-
           </tr>
           <tr>
             <th scope="row">Battery Capacity</th>
-            <td>400mps</td>
-
+            <td>30.0Ah/795Wh</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-
 {% endblock %}
 {% block footer %}
 <script type="text/javascript">
   var progressDiv = $('<div class="progress">');
   var progressBar = $(
     '<div id="prog" class="progress-bar progress-bar-striped progress-bar-animated text-center" role="progressbar" aria-valuemin="0" aria-valuemax="100">'
-    );
+  );
+  var otherdetails = $('');
+  var batterylevel = 0;
   $(function () {
     $.getJSON('/chargeLevel',
       function (data) {
-        progressBar.text(data + "%");
+        progressBar.text(data + " %").css('font-weight', 'bolder').css('font-size', '15px');
         //do nothing
+        batterylevel = data;
         if (data < 35) {
           progressBar.addClass('bg-danger');
         } else if (data < 55) {
@@ -65,24 +84,50 @@
           progressBar.addClass('bg-success');
         }
         progressBar.width(data + '%').attr('aria-valuenow', data);
-
         console.log(data + " : Charge Level");
         return false;
       });
   });
   $(progressBar).appendTo(progressDiv);
   $(progressDiv).appendTo('.myBar');
-
   $(function () {
     $.getJSON('/isCharge',
       function (data) {
         if (data.isCharge == 'True') {
           console.log("Charging");
+          $('#expectedTime').text('1 hr 26 min. left until fully charged');
+          $('.progress').append(
+            '<img id="imgChar" width="35" src="https://image.flaticon.com/icons/svg/616/616494.svg">')
         } else {
           console.log("Not Charging");
+          $('#expectedTime').text('Should last another 4 hours');
+          $('#imgChar').remove();
         }
         return false;
       });
   });
+
+  ///////////////////////////////////////    Battery Saver    ////////////////////////////////////
+  $('#batterySaver').on('click', function () {
+    if ($('#batterySaver').text() == "OFF") {
+      $('#batterySaver').text("ON");
+      $('#batterySaver').removeClass('btn-light');
+      $('#batterySaver').addClass('btn-success');
+      $('.progress').addClass('saverProgress');
+      $(function () {
+      $.getJSON('/batterysaver',
+        function (data) {
+          console.log("saving battttt");
+          return false;
+        });
+      });
+    } 
+    else {
+      $('.progress').removeClass('saverProgress');
+      $('#batterySaver').removeClass('btn-success');
+      $('#batterySaver').addClass('btn-light');
+      $('#batterySaver').text("OFF");
+    }
+  })
 </script>
 {% endblock %}
