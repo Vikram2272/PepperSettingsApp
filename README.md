@@ -1,4 +1,4 @@
-# PepperSettingsApp
+# Pepper Settings App
 
 Currently under development:
   - Battery Settings
